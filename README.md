@@ -1,18 +1,26 @@
 # chat
 
+## Use with Firebase Realtime Database
+Clone this and follow the installation process :
+```
+git clone https://github.com/JuAlexandre/chat/tree/1.0
+```
+
+## Use with Cloud Firestore
+Clone this and follow the installation process :
+```
+git clone https://github.com/JuAlexandre/chat/tree/2.0
+```
+
 ## Installation
-Clone the repository and move in :
+
+Move in the cloned folder and install dependencies :
 ```
-$ git clone https://github.com/JuAlexandre/chat.git
 $ cd chat
+$ yarn install
 ```
 
-Install dependencies :
-```
-yarn install
-```
-
-Create a file named ``firebaseConfig.js`` at the root of your project with the configuration of your Firebase project :
+Create a file named `firebaseConfig.js` at the root of your project with the configuration of your Firebase project :
 ```js
 export const firebaseConfig = {
     apiKey: "...",
@@ -23,9 +31,3 @@ export const firebaseConfig = {
     messagingSenderId: "..."
 };
 ```
-
-## Use with Firebase Realtime Database
-On the master branch the chat use the Firebase Realtime Database, you can see it in the ``Fire.js`` file.
-
-## Use with Cloud Firestore
-Move into the ``firestore`` branch. You can see the code in the ``Fire.js`` file.
