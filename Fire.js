@@ -1,4 +1,5 @@
 import firebase from 'firebase';
+import 'firebase/firestore';
 
 import {firebaseConfig} from './firebaseConfig';
 
@@ -9,15 +10,11 @@ class Fire {
     }
 
     static get ref() {
-        return firebase.database().ref('messages');
+        return firebase.firestore().collection('messages');
     }
 
     static get uid() {
         return (firebase.auth().currentUser || {}).uid;
-    }
-
-    static get timestamp() {
-        return firebase.database.ServerValue.TIMESTAMP;
     }
 
     static off() {
@@ -26,9 +23,7 @@ class Fire {
 
     init = () => firebase.initializeApp(firebaseConfig);
 
-    observeAuth = () => firebase.auth().onAuthStateChanged(this.onAuthStateChanged);
-
-    onAuthStateChanged = user => {
+    observeAuth = () => firebase.auth().onAuthStateChanged(user => {
         if (!user) {
             try {
                 return firebase.auth().signInAnonymously();
@@ -36,27 +31,32 @@ class Fire {
                 alert(message);
             }
         }
-    };
+    });
 
-    on = callback => Fire.ref.on('child_added', snapshot => callback(this.parse(snapshot)));
+    on = callback => Fire.ref.orderBy('createdAt', 'asc').onSnapshot(snapshot => {
+        snapshot.docChanges().forEach(change => {
+            if (change.type === 'added') {
+                callback(this.parse(change.doc))
+            }
+        })
+    });
 
-    parse = snapshot => {
-        const {timestamp: numberStamp, text, user} = snapshot.val();
-        const {key: _id} = snapshot;
-        const timestamp = new Date(numberStamp);
+    parse = message => {
+        const {createdAt, text, user} = message.data();
+        const {id: _id} = message;
 
-        return {_id, timestamp, text, user};
+        return {_id, createdAt: Date(createdAt), text, user};
     };
 
     send = messages => {
         for (let i = 0; i < messages.length; i++) {
             const {text, user} = messages[i];
-            const message = {text, user, timestamp: Fire.timestamp};
+            const message = {text, user, createdAt: new Date()};
             this.append(message);
         }
     };
 
-    append = message => Fire.ref.push(message);
+    append = message => Fire.ref.add(message);
 }
 
 Fire.shared = new Fire();
