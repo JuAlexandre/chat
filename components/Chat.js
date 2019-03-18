@@ -1,11 +1,13 @@
 import React, {Component} from 'react';
-import {View, StyleSheet, KeyboardAvoidingView} from 'react-native';
-import { GiftedChat } from 'react-native-gifted-chat';
+import {View, KeyboardAvoidingView} from 'react-native';
+import {GiftedChat} from 'react-native-gifted-chat';
 
 import Fire from '../Fire';
 
 class Chat extends Component {
-    state = {messages: []};
+    state = {
+        messages: []
+    };
 
     static navigationOptions = ({navigation}) => ({
         title: (navigation.state.params || {}).name || 'Chat!',
@@ -20,13 +22,13 @@ class Chat extends Component {
     }
 
     componentWillUnmount() {
-        Fire.shared.off();
+        Fire.off();
     }
 
     get user() {
         return {
             name: this.props.navigation.state.params.name,
-            _id: Fire.shared.uid,
+            _id: Fire.uid,
         };
     }
 
@@ -43,7 +45,5 @@ class Chat extends Component {
         )
     }
 }
-
-const styles = StyleSheet.create({});
 
 export default Chat;

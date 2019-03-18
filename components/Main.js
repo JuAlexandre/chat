@@ -2,7 +2,9 @@ import React, {Component} from 'react';
 import {View, StyleSheet, Text, TextInput, TouchableOpacity} from 'react-native';
 
 class Main extends Component {
-    state = { name: '' };
+    state = {
+        name: ''
+    };
 
     onPress = () => {
         if (this.state.name) {
